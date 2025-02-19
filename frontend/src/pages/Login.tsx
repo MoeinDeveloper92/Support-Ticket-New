@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import { loginUser, reset } from '../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../shared/Spinner';
 const Login = () => {
   const [formData, setFormData] = useState<LoginUserDto>({
     email: '',
@@ -46,7 +47,7 @@ const Login = () => {
   };
 
   if (isLoading) {
-    return <h1>Loading....</h1>;
+    return <Spinner loading={isLoading} />;
   }
   return (
     <>

@@ -3,8 +3,8 @@ import ErrorResponse from '../utils/errorResponse';
 import asyncHandler from '../middleware/async';
 import { IUser, User } from '../models/User';
 
-import { UserPayload } from '../@types/user/user-payload.dto';
-import { AuthenticatedRequest } from '../middleware/auth';
+import { UserPayload } from '../types/user/user-payload.dto';
+
 //@desc   register a new User
 //@route  POST /api/v1/users/register
 //@access Public
@@ -67,6 +67,7 @@ export const loginUser = asyncHandler(
 //@access private
 export const getMe = asyncHandler(
   async (req: any, res: Response, next: NextFunction) => {
+    // console.log(req.user)
     res.status(200).json({
       success: true,
       message: 'GET ME ROUTE',

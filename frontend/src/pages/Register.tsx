@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { registerUser, reset } from '../features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import { useNavigate } from 'react-router-dom';
+import Spinner from '../shared/Spinner';
 const Register = () => {
   const [formData, setFormData] = useState<CreateUserDto>({
     name: '',
@@ -56,7 +57,7 @@ const Register = () => {
   };
 
   if (isLoading) {
-    return <h1>Loading....</h1>;
+    return <Spinner loading={isLoading} />;
   }
   return (
     <>

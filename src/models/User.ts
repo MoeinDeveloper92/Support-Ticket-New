@@ -1,7 +1,7 @@
 import { Schema, model, InferSchemaType } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
-import { UserPayload } from '../@types/user/user-payload.dto';
+import { UserPayload } from '../types/user/user-payload.dto';
 const userSchema = new Schema({
   name: {
     type: String,
@@ -44,7 +44,7 @@ userSchema.methods.generateToken = function (userPayload: UserPayload): string {
     },
     SECRET_KEY,
     {
-      expiresIn: EXPIRES, 
+      expiresIn: EXPIRES,
     } as SignOptions // Explicitly ensure correct type
   );
 };

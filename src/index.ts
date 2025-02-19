@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import colors from 'colors';
 import dataBaseConnection from './config/db';
 import userRoutes from './routes/userRoutes';
+import ticketRoutes from './routes/ticketRoutes';
 import errorHandler from './middleware/error';
 dotenv.config();
 
@@ -28,6 +29,7 @@ const server = () => {
 
   //Routes
   app.use('/api/v1/users', userRoutes);
+  app.use('/api/v1/tickets', ticketRoutes);
 
   app.use(errorHandler);
   app.listen(PORT as number, '0.0.0.0', () => {

@@ -2,17 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { IUser, User } from '../models/User';
 import asyncHandler from './async';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-
 import ErrorResponse from '../utils/errorResponse';
-import { UserPayload } from '../@types/user/user-payload.dto';
-
-// Extend Request to include `user` property
-export interface AuthenticatedRequest extends Request {
-  user?: IUser;
-}
 
 const protect = asyncHandler(
-  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     let token: string | undefined;
 
     if (
@@ -41,6 +34,7 @@ const protect = asyncHandler(
         }
 
         // Assign user to `req.user`
+        // req.user = user;
         req.user = user;
 
         next();
