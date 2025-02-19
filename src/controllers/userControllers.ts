@@ -4,6 +4,7 @@ import asyncHandler from '../middleware/async';
 import { IUser, User } from '../models/User';
 
 import { UserPayload } from '../@types/user/user-payload.dto';
+import { AuthenticatedRequest } from '../middleware/auth';
 //@desc   register a new User
 //@route  POST /api/v1/users/register
 //@access Public
@@ -29,11 +30,12 @@ export const registerUser = asyncHandler(
       email,
       password,
     });
-
-    res.status(200).json({
-      success: true,
-      data: newUser,
-    });
+    const payload: UserPayload = {
+      name: newUser.name,
+      email: newUser.email,
+      id: newUser._id.toString(),
+    };
+    generateResponse(newUser, payload, res);
   }
 );
 
@@ -60,6 +62,18 @@ export const loginUser = asyncHandler(
   }
 );
 
+//@desc   get me
+//@route  GET /api/v1/users/me
+//@access private
+export const getMe = asyncHandler(
+  async (req: any, res: Response, next: NextFunction) => {
+    res.status(200).json({
+      success: true,
+      message: 'GET ME ROUTE',
+    });
+  }
+);
+
 const generateResponse = (
   user: IUser,
   userPayload: UserPayload,
@@ -69,6 +83,7 @@ const generateResponse = (
   const token = user.generateToken(userPayload);
   res.status(200).json({
     success: true,
+    data: user,
     token,
   });
 };

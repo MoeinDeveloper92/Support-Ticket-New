@@ -33,8 +33,8 @@ userSchema.methods.generateToken = function (userPayload: UserPayload): string {
 
   // Ensure EXPIRES is either a valid string or a number
   const EXPIRES: string | number = process.env.JWT_EXPIRE
-    ? parseInt(process.env.JWT_EXPIRE) || process.env.JWT_EXPIRE
-    : '1d';
+    ? +process.env.JWT_EXPIRE || process.env.JWT_EXPIRE
+    : '30d';
 
   return jwt.sign(
     {
@@ -44,7 +44,7 @@ userSchema.methods.generateToken = function (userPayload: UserPayload): string {
     },
     SECRET_KEY,
     {
-      expiresIn: EXPIRES, // ✅ Now correctly typed
+      expiresIn: EXPIRES, 
     } as SignOptions // Explicitly ensure correct type
   );
 };

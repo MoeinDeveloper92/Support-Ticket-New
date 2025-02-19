@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "start:dev": "nodemon src/index.ts",
-    "start:prod": "NODE_ENV=production nodemon src/index.ts"
+    "start:prod": "NODE_ENV=production nodemon src/index.ts",
+    "start:client": "npm run dev --prefix frontend",
+    "start:client-server": "concurrently \"npm run start:dev\" \"npm run start:client\""
   },
   "keywords": [],
   "author": "",
