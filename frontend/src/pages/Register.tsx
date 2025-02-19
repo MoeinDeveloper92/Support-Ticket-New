@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { CreateUserDto } from '../@types/user.dto';
+import { useState, useEffect } from 'react';
+import { CreateUserDto, RegisterUserInServer } from '../@types/user.dto';
 import { FaUser } from 'react-icons/fa';
 import Input from '../shared/Input';
 import { toast } from 'react-toastify';
+import { registerUser, reset } from '../features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../app/hook';
+import { useNavigate } from 'react-router-dom';
 const Register = () => {
   const [formData, setFormData] = useState<CreateUserDto>({
     name: '',
@@ -11,6 +14,11 @@ const Register = () => {
     password2: '',
   });
   const { name, email, password, password2 } = formData;
+  const { isError, isLoading, isSuccess, message, user, token } =
+    useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((preData) => ({
@@ -19,6 +27,18 @@ const Register = () => {
     }));
   };
 
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    //if it is successfull we want to redirect
+    if (isSuccess || token || user) {
+      navigate('/');
+    }
+    dispatch(reset());
+  }, [isError, isSuccess, message, dispatch, navigate, token, user]);
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== password2 || password.length === 0) {
@@ -26,8 +46,18 @@ const Register = () => {
       return;
     }
 
-    alert('Form Submitted!');
+    const newUser: RegisterUserInServer = {
+      name,
+      email,
+      password,
+    };
+
+    dispatch(registerUser(newUser));
   };
+
+  if (isLoading) {
+    return <h1>Loading....</h1>;
+  }
   return (
     <>
       <section className="heading">

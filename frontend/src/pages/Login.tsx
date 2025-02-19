@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoginUserDto } from '../@types/user.dto';
 import { FaSignInAlt } from 'react-icons/fa';
 import Input from '../shared/Input';
 import { toast } from 'react-toastify';
-
+import { useAppDispatch, useAppSelector } from '../app/hook';
+import { loginUser, reset } from '../features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [formData, setFormData] = useState<LoginUserDto>({
     email: '',
     password: '',
   });
   const { email, password } = formData;
+  const { isLoading, isError, isSuccess, user, token, message } =
+    useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((preData) => ({
@@ -18,11 +24,30 @@ const Login = () => {
     }));
   };
 
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess) {
+      navigate('/');
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, message, user, token, navigate, dispatch]);
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    alert('Form Submitted!');
+    const loginUserDto: LoginUserDto = {
+      email,
+      password,
+    };
+    dispatch(loginUser(loginUserDto));
   };
+
+  if (isLoading) {
+    return <h1>Loading....</h1>;
+  }
   return (
     <>
       <section className="heading">

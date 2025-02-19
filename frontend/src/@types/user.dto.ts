@@ -1,7 +1,16 @@
+export interface UserResponseFromServer {
+  success: boolean;
+  data: UserDto;
+  token: string;
+}
+
 export interface UserDto {
+  _id: string;
   name: string;
   email: string;
-  _id: string;
+  isAdmin: boolean;
+  createdAt: Date;
+  __v: number;
 }
 
 export interface CreateUserDto {
@@ -17,3 +26,4 @@ export interface LoginUserDto {
 }
 
 export type RegisterUserInServer = Partial<CreateUserDto>;
+export type UpdateUserInServer = Partial<CreateUserDto>;
