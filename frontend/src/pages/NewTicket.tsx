@@ -7,6 +7,7 @@ import { CreateTicketDto } from '../@types/ticket.dto';
 import Spinner from '../shared/Spinner';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../shared/BackButton';
 const NewTicket = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { isLoading, isError, isSuccess, message } = useAppSelector(
@@ -25,9 +26,11 @@ const NewTicket = () => {
     }
     if (isSuccess) {
       navigate('/tickets');
+      dispatch(reset());
     }
     dispatch(reset());
   }, [isSuccess, isError, message, dispatch, navigate]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newTicket: CreateTicketDto = {
@@ -43,6 +46,7 @@ const NewTicket = () => {
   }
   return (
     <>
+      <BackButton url="/" />
       <section className="heading">
         <h1>Create New Ticket</h1>
         <p>Please Fill Out The Form Below!</p>
