@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   CreateTicketDto,
+  DataForTicketUpdate,
   ResponseFromServerAfterTicketCreation,
   Ticket,
 } from '../../@types/ticket.dto';
@@ -50,10 +51,55 @@ export const getAllTickets =
 
     async (_: any, thunkAPI) => {
       const { auth } = thunkAPI.getState() as RootState;
-
       return await ticketService.getAllTickets(auth.token as string);
     }
   );
+
+//@desc get single ticket
+//By passing this to createAsynThunk we specify the type of the data we get ffrom backend
+//then in th action we can easiyl get the desired data wihtough compaing about the data
+export const getSingleTicket = createAsyncThunk<
+  ResponseFromServerAfterTicketCreation,
+  string,
+  { state: RootState }
+>('ticket/getTicket', async (ticketId: string, thunkAPI) => {
+  try {
+    const { auth } = thunkAPI.getState() as RootState;
+    return await ticketService.getSingleTicket(ticketId, auth.token as string);
+  } catch (error: any) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+//@desc   close the ticket
+export const updateTicket = createAsyncThunk<
+  ResponseFromServerAfterTicketCreation,
+  DataForTicketUpdate
+>(
+  'ticket/close',
+  async (dataForTicketUpdate: DataForTicketUpdate, thunkAPI) => {
+    try {
+      const { auth } = thunkAPI.getState() as RootState;
+
+      return await ticketService.updateTicket(
+        dataForTicketUpdate,
+        auth.token as string
+      );
+    } catch (error: any) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const ticketSlice = createSlice({
   name: 'ticket',
   initialState,
@@ -88,6 +134,27 @@ export const ticketSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.message = action.payload as string;
+    });
+    builder.addCase(getSingleTicket.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getSingleTicket.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.ticket = action.payload.data as Ticket;
+    });
+    builder.addCase(getSingleTicket.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload as string;
+    });
+    builder.addCase(updateTicket.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateTicket.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.ticket = action.payload.data as Ticket;
     });
   },
 });

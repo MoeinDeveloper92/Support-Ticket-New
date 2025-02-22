@@ -8,6 +8,7 @@ import Tickets from './pages/Tickets';
 import PrivateComponent from './components/PrivateComponent';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import Ticket from './pages/Ticket';
 const App = () => {
   return (
     <div className="container">
@@ -22,6 +23,9 @@ const App = () => {
 
         <Route path="/tickets" element={<PrivateComponent />}>
           <Route path="/tickets" element={<Tickets />} />
+        </Route>
+        <Route path="/ticket/:ticketId" element={<PrivateComponent />}>
+          <Route path={`/ticket/:ticketId`} element={<Ticket />} />
         </Route>
       </Routes>
       <ToastContainer />

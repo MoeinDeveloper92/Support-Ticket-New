@@ -58,6 +58,7 @@ export const loginUser = createAsyncThunk<
   try {
     return await authService.loginUser(userData);
   } catch (error: any) {
+    console.log('ERROR =>>>>>', error);
     const message =
       error.response?.data?.message || error.message || error.toString();
 

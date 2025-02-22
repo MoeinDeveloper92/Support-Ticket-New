@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '../app/hook';
 import { getAllTickets, reset } from '../features/tickets/ticketSlice';
 import Spinner from '../shared/Spinner';
 import BackButton from '../shared/BackButton';
-import Ticket from '../components/Ticket';
+import TicketComponent from '../components/TicketCompoennt';
 const Tickets = () => {
   const { isLoading, isSuccess, tickets } = useAppSelector(
     (state) => state.ticket
@@ -11,11 +11,14 @@ const Tickets = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getAllTickets());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     return () => {
       if (isSuccess) {
+        console.log(
+          'I am comming from Single Ticket component since the isSuccess is Trure'
+        );
         dispatch(reset());
       }
     };
@@ -36,7 +39,7 @@ const Tickets = () => {
           <div></div>
         </div>
         {tickets?.map((ticket) => (
-          <Ticket key={ticket._id} ticket={ticket} />
+          <TicketComponent key={ticket._id} ticket={ticket} />
         ))}
       </div>
     </>

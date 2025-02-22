@@ -24,3 +24,8 @@ export interface CreateTicketDto {
   product: Product;
   description: string;
 }
+
+export interface DataForTicketUpdate {
+  ticketId: string;
+  status: string;
+}

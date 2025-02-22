@@ -47,7 +47,7 @@ export const loginUser = asyncHandler(
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     const pwMatch = await user?.verifyPassword(password);
-
+    console.log('PW MATCH->>>>', pwMatch);
     //check user and password match
     if (user && pwMatch) {
       const payload: UserPayload = {
@@ -57,7 +57,7 @@ export const loginUser = asyncHandler(
       };
       generateResponse(user, payload, res);
     } else {
-      return next(new ErrorResponse('Invalud Credentials!', 401));
+      return next(new ErrorResponse('Invalid Credentials!', 401));
     }
   }
 );

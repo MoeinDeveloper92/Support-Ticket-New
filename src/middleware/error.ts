@@ -8,16 +8,16 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   let error = { ...err };
-  const statusCode = error.statusCode ? error.statusCode : 500;
+  const statusCode = err.statusCode ? err.statusCode : 500;
   if (err.name === 'CastError') {
     const message = `Resouce with id ${err.value} not found!`;
     error.statusCode = 404;
     error = new ErrorResponse(message, error.statusCode);
   }
-  res.status(error.statusCode).json({
+  res.status(err.statusCode).json({
     success: false,
-    message: error?.message,
-    stack: process.env.NODE_ENV === 'development' && error.stack,
+    message: err?.message,
+    stack: process.env.NODE_ENV === 'development' && err.stack,
   });
 };
 

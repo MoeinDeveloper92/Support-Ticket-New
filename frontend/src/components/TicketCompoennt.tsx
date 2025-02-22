@@ -1,7 +1,7 @@
 import { Ticket as TicketDto } from '../@types/ticket.dto';
 import { Link } from 'react-router-dom';
 
-const Ticket = ({ ticket }: { ticket: TicketDto }) => {
+const TicketComponent = ({ ticket }: { ticket: TicketDto }) => {
   return (
     <div className="ticket">
       <div>{new Date(ticket.createdAt as Date).toLocaleDateString()}</div>
@@ -14,4 +14,4 @@ const Ticket = ({ ticket }: { ticket: TicketDto }) => {
   );
 };
 
-export default Ticket;
+export default TicketComponent;
