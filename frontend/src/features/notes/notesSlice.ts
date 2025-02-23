@@ -7,6 +7,7 @@ import {
   NoteResponseFromServer,
 } from '../../@types/note.dto';
 import { RootState } from '../../app/store';
+import { toast } from 'react-toastify';
 
 const initialState: NoteInitialState = {
   notes: null,
@@ -94,9 +95,15 @@ export const noteSlice = createSlice({
     builder.addCase(deleteNote.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-    state.notes = state.notes?.filter(
-      (note) => note._id.toString() !== action.payload.noteId?.toString()
-    );
+      state.notes = state.notes?.filter(
+        (note) => note._id.toString() !== action.payload.noteId?.toString()
+      );
+      toast.success('Note Deleted Successfully!');
+    });
+    builder.addCase(deleteNote.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload as string;
     });
   },
 });

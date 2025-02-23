@@ -56,9 +56,7 @@ const Ticket = () => {
     // eslint-disabled
   }, [isError, message, ticketId]);
 
-  // useEffect(()=>{
-  //   toast.success()
-  // },[notes])
+ 
   useEffect(() => {
     return () => {
       if (noteSuccess) {

@@ -1,18 +1,29 @@
+// src/components/NoteComponent.tsx
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import { Note } from '../@types/note.dto';
 import { deleteNote } from '../features/notes/notesSlice';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import Modal from '../shared/Modal';
+import { useState } from 'react';
+
 const NoteComponent = ({ note }: { note: Note }) => {
   const { user } = useAppSelector((state) => state.auth);
-
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   const handleDeleteNote = () => {
-    if (window.confirm('Are you sure you want to delete the Note')) {
-      dispatch(deleteNote(note._id));
-    }
+    // Instead of using window.confirm, open our custom modal
+    setIsModalOpen(true);
   };
+
+  const handleConfirmDelete = () => {
+    dispatch(deleteNote(note._id));
+    setIsModalOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div
@@ -25,8 +36,8 @@ const NoteComponent = ({ note }: { note: Note }) => {
         <h4>
           Note From{' '}
           {note.isStaff ? <span>Staff</span> : <span>{user?.name}</span>}
-          <p>{note.text}</p>
         </h4>
+        <p>{note.text}</p>
         <div className="note-date">
           {new Date(note.createdAt).toLocaleDateString('en-US')}
         </div>
@@ -34,6 +45,19 @@ const NoteComponent = ({ note }: { note: Note }) => {
           <button onClick={handleDeleteNote}>Delete</button>
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
+        <h2>Confirm Delete</h2>
+        <p>Are you sure you want to delete this note?</p>
+        <div className="flex justify-end mt-4 space-x-2">
+          <button onClick={handleCancelDelete} className="btn btn-secondary">
+            Cancel
+          </button>
+          <button onClick={handleConfirmDelete} className="btn btn-danger">
+            Delete
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };
